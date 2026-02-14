@@ -27,6 +27,9 @@ services:
   # Spring Boot App Service
   app:
     build: .
+    volumes:
+      - ./docs:/app/build/spring-modulith-docs
+      - ./build-reports:/app/build/reports/tests/test
     container_name: spring_app
     ports:
       - "8080:8080"
