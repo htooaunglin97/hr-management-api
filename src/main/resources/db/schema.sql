@@ -27,8 +27,26 @@ CREATE TABLE users(
 
 CREATE TABLE user_roles (
     user_id UUID NOT NULL,
-    role_id INTEGER NOT NULL, -- Role PK က SERIAL မို့ INTEGER သုံးထားသည်
+    role_id BIGINT NOT NULL, -- Role PK က SERIAL မို့ INTEGER သုံးထားသည်
     PRIMARY KEY (user_id, role_id),
     CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     CONSTRAINT fk_role FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE CASCADE
 );
+
+CREATE TABLE password_reset_tokens (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    token VARCHAR(80) NOT NULL UNIQUE,
+    user_id UUID NOT NULL,
+    expires_at TIMESTAMP NOT NULL,
+    used_at TIMESTAMP,
+    CONSTRAINT fk_reset_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);
+
+spring:
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/schema.sql
+  jpa:
+    hibernate:
+      ddl-auto: none
