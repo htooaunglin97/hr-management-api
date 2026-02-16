@@ -1,16 +1,28 @@
 spring:
   application:
     name: hr-management-api
+
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/hr_management}
     username: ${SPRING_DATASOURCE_USERNAME:postgres}
     password: ${SPRING_DATASOURCE_PASSWORD:postgres}
     driver-class-name: org.postgresql.Driver
+
   data:
     redis:
       host: ${SPRING_DATA_REDIS_HOST:localhost}
       port: ${SPRING_DATA_REDIS_PORT:6379}
-  app:
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:db/schema.sql
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+
+app:
   jwt:
     secret: ${JWT_SECRET:change_me_to_a_long_random_secret_at_least_64_chars}
     accessTokenMinutes: ${JWT_ACCESS_MINUTES:60}
