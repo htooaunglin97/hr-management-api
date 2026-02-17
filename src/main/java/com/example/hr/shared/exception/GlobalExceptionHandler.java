@@ -1,5 +1,6 @@
 package com.example.hr.shared.exception;
 
+import com.example.hr.attendance.api.exception.UserAlreadyCheckedInException;
 import com.example.hr.shared.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,5 +28,15 @@ public class GlobalExceptionHandler {
                 ex.getMessage()
         );
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserAlreadyCheckedInException.class)
+    public ResponseEntity<ErrorResponse> handleAlreadyCheckedIn(UserAlreadyCheckedInException ex) {
+        ErrorResponse error = ErrorResponse.of(
+                HttpStatus.CONFLICT.value(),
+                "Conflict",
+                ex.getMessage()
+        );
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 }
