@@ -1,5 +1,6 @@
 package com.example.hr.attendance.service;
 
+import com.example.hr.attendance.api.exception.NoCheckedInFoundException;
 import com.example.hr.attendance.api.exception.UserAlreadyCheckedInException;
 import com.example.hr.attendance.dto.CheckInRequest;
 import com.example.hr.attendance.entity.Attendance;
@@ -8,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -67,6 +67,23 @@ public class AttendanceServiceTest {
         assertThat(savedAttendance.getEmployeeId()).isEqualTo(empId);
         assertThat(savedAttendance.getCheckIn()).isNotNull();
         assertThat(savedAttendance.getCheckOut()).isNull();
+    }
+
+
+    void shouldNotCheckOutIfNoCheckInRecord() {
+        UUID empId = UUID.randomUUID();
+        CheckInRequest request = new CheckInRequest(empId);
+
+        when(attendanceRepository.existsByEmployeeIdAndDate(empId, any()))
+                .thenReturn(true);
+
+        assertThrows(NoCheckedInFoundException.class, () -> {
+            attendanceService.clockIn(request);
+        });
+    }
+
+    void shouldNotCheckOutIfAlreadyCheckedOut() {
+
     }
 
 

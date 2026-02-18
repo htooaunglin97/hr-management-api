@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -20,13 +21,12 @@ public class Attendance extends MasterEntity {
     private UUID employeeId;
 
     @Column(nullable = false)
+    private LocalDate date;
+
+    @Column(nullable = false)
     private Instant checkIn;
 
     private Instant checkOut;
 
-    public double getWorkHours() {
-        if (checkIn == null || checkOut == null) return 0.0;
-        return Duration.between(checkIn, checkOut).toMinutes() / 60.0;
-    }
-
+    private Long workMinutes;
 }
